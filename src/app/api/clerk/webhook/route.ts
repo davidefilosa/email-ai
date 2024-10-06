@@ -57,7 +57,7 @@ export async function POST(req: Request) {
   console.log("Webhook body:", body);
 
   if (eventType === "user.created") {
-    prismadb.user.create({
+    await prismadb.user.create({
       data: {
         id: id,
         firstName: evt.data.first_name || "user",
@@ -69,7 +69,7 @@ export async function POST(req: Request) {
   }
 
   if (eventType === "user.deleted") {
-    prismadb.user.delete({
+    await prismadb.user.delete({
       where: { id },
     });
   }
