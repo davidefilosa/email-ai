@@ -56,9 +56,10 @@ export async function POST(req: Request) {
   console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
   console.log("Webhook body:", body);
 
-  if (evt.type === "user.created") {
+  if (eventType === "user.created") {
     prismadb.user.create({
       data: {
+        id: id,
         firstName: evt.data.first_name || "user",
         lastName: evt.data.last_name || "user",
         emailAdress: evt.data.email_addresses[0].email_address,
@@ -67,5 +68,11 @@ export async function POST(req: Request) {
     });
   }
 
-  return new Response("", { status: 200 });
+  if (eventType === "user.deleted") {
+    prismadb.user.delete({
+      where: { id },
+    });
+  }
+
+  return new Response("Webhook received", { status: 200 });
 }
